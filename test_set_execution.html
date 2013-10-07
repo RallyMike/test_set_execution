@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Custom App</title>
+
+    <!--Include SDK-->
+    <script type="text/javascript" src="/apps/2.0rc1/sdk.js"></script>
+
+    <!--App code-->
+    <script type="text/javascript">
+
+        Rally.onReady(function() {
+
+            Ext.define('CustomApp', {
+                extend: 'Rally.app.App',
+                componentCls: 'app',
+                layout:{
+                    type:'vbox',
+                    align:'stretch'
+                },
+                items:[
+
+                    { // define a container to house header info about the PI
+                        xtype:'container',
+                        itemId:'testSetHeaderContainer',
+                        padding:'15 15 15 15' // top ? bottom left,
+                    }
+                ],
+
+                launch: function() {
+                    //Write app code here
+
+                    console.log("App is Running!");
+
+                    // add select TestSet combobox to header
+                    var aContainer = this.down('#testSetHeaderContainer');
+
+                    var aStore = Ext.create('Rally.data.WsapiDataStore', {
+                        model: 'TestSet',
+                        fetch: ['Name'],
+                        autoLoad: true,
+                        listeners: {
+                            load: function(store, records) {
+                                //process records
+                            }
+                        }
+                    });
+
+
+
+                    aContainer.add({
+                        xtype:'rallycombobox',
+                        text:'Select Test Set',
+                        store: aStore,
+                        autoSelect: false,
+                        listeners:{
+                            //click: this._fireChooser,
+                            scope: this
+                        }
+                    });
+
+
+                    // NOTE: the below worked but I wanted to separate out the data store
+//                    aContainer.add({
+//                        xtype:'rallycombobox',
+//                        text:'Select Test Set',
+//                        storeConfig: {
+//                            autoLoad: true,
+//                            //model: 'UserStory'
+//                            model: 'TestSet'
+//                        },
+//                        //storeConfig: aStore,
+//                        listeners:{
+//                            //click: this._fireChooser,
+//                            scope: this
+//                        }
+//                    });
+
+
+
+                }
+            });
+
+            Rally.launchApp('CustomApp', {
+                name: 'My Custom App'
+            });
+
+        });
+
+    </script>
+
+    <!--App styles-->
+    <style type="text/css">
+
+        .app {
+            /* Add app styles here */
+        }
+
+    </style>
+
+</head>
+<body class="myApp">
+</body>
+</html>
